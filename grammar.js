@@ -121,7 +121,12 @@ module.exports = grammar(HTML, {
           alias('loading', $.control_keyword),
           optional($.loading_condition),
           field('body', $.statement_block),
-          optional(field('error', $.error_statement)),
+          optional(
+            choice(
+              field('placeholder', $.placeholder_statement),
+              field('error', $.error_statement),
+            ),
+          ),
         ),
       ),
 

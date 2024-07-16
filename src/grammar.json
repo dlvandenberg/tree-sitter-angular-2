@@ -890,12 +890,25 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "FIELD",
-                "name": "error",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "error_statement"
-                }
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "FIELD",
+                    "name": "placeholder",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "placeholder_statement"
+                    }
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "error",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "error_statement"
+                    }
+                  }
+                ]
               },
               {
                 "type": "BLANK"

@@ -1721,6 +1721,16 @@
             "named": true
           }
         ]
+      },
+      "placeholder": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "placeholder_statement",
+            "named": true
+          }
+        ]
       }
     },
     "children": {

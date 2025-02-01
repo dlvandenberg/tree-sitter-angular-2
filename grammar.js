@@ -189,7 +189,7 @@ module.exports = grammar(HTML, {
           alias('for', $.control_keyword),
           '(',
           field('declaration', $.for_declaration),
-          optional(field('reference', $.for_reference)),
+          optional(seq(';', field('reference', $.for_reference))),
           ')',
           field('body', $.statement_block),
         ),
@@ -209,12 +209,11 @@ module.exports = grammar(HTML, {
         field('value', $.expression),
         ';',
         alias('track', $.special_keyword),
-        field('track', $.expression),
+        field('track', $._any_expression),
       ),
 
     for_reference: ($) =>
       seq(
-        ';',
         alias('let', $.special_keyword),
         field('alias', $.assignment_expression),
         repeat(seq(choice(';', ','), field('alias', $.assignment_expression))),
@@ -502,11 +501,34 @@ module.exports = grammar(HTML, {
     // Identifier
     identifier: () => /[a-zA-Z_0-9\-\$]+/,
 
+    _escape_sequence: (_) =>
+      token.immediate(
+        seq(
+          '\\',
+          choice(
+            /[^xu0-7]/,
+            /[0-7]{1,3}/,
+            /x[0-9a-fA-F]{2}/,
+            /u[0-9a-fA-F]{4}/,
+            /u\{[0-9a-fA-F]+\}/,
+            /[\r?][\n\u2028\u2029]/,
+          ),
+        ),
+      ),
+
     // String
     string: ($) =>
       choice(
-        seq($._double_quote, repeat(token.immediate(/[^"]/)), $._double_quote),
-        seq($._single_quote, repeat(token.immediate(/[^']/)), $._single_quote),
+        seq(
+          $._double_quote,
+          repeat(choice(token.immediate(/[^"]/), $._escape_sequence)),
+          $._double_quote,
+        ),
+        seq(
+          $._single_quote,
+          repeat(choice(token.immediate(/[^']/), $._escape_sequence)),
+          $._single_quote,
+        ),
       ),
 
     // Number
